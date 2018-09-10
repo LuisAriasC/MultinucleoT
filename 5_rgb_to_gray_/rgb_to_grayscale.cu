@@ -5,7 +5,7 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
-#include "../common/common.h"
+#include "common.h"
 #include <cuda_runtime.h>
 
 using namespace std;
@@ -14,7 +14,7 @@ using namespace std;
 // ouput - output image one dimensional array
 // width, height - width and height of the images
 // colorWidthStep - number of color bytes (cols * colors)
-// grayWidthStep - number of gray bytes 
+// grayWidthStep - number of gray bytes
 __global__ void bgr_to_gray_kernel(unsigned char* input, unsigned char* output, int width, int height, int colorWidthStep, int grayWidthStep)
 {
 	// 2D Index of current thread
@@ -36,7 +36,7 @@ __global__ void bgr_to_gray_kernel(unsigned char* input, unsigned char* output, 
 
 		// The standard NTSC conversion formula that is used for calculating the effective luminance of a pixel (https://en.wikipedia.org/wiki/Grayscale#Luma_coding_in_video_systems)
 		const float gray = red * 0.3f + green * 0.59f + blue * 0.11f;
-		
+
 		// Alternatively, use an average
 		//const float gray = (red + green + blue) / 3.f;
 
@@ -48,7 +48,7 @@ void convert_to_gray(const cv::Mat& input, cv::Mat& output)
 {
 	cout << "Input image step: " << input.step << " rows: " << input.rows << " cols: " << input.cols << endl;
 	// Calculate total number of bytes of input and output image
-	// Step = cols * number of colors	
+	// Step = cols * number of colors
 	size_t colorBytes = input.step * input.rows;
 	size_t grayBytes = output.step * output.rows;
 
@@ -68,7 +68,7 @@ void convert_to_gray(const cv::Mat& input, cv::Mat& output)
 	// const dim3 grid((input.cols + block.x - 1) / block.x, (input.rows + block.y - 1) / block.y);
 	const dim3 grid((int)ceil((float)input.cols / block.x), (int)ceil((float)input.rows/ block.y));
 	printf("bgr_to_gray_kernel<<<(%d, %d) , (%d, %d)>>>\n", grid.x, grid.y, block.x, block.y);
-	
+
 	// Launch the color conversion kernel
 	bgr_to_gray_kernel <<<grid, block >>>(d_input, d_output, input.cols, input.rows, static_cast<int>(input.step), static_cast<int>(output.step));
 
@@ -86,7 +86,7 @@ void convert_to_gray(const cv::Mat& input, cv::Mat& output)
 int main(int argc, char *argv[])
 {
 	string imagePath;
-	
+
 	if(argc < 2)
 		imagePath = "image.jpg";
   	else
