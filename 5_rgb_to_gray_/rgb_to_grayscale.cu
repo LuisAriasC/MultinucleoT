@@ -107,17 +107,18 @@ int main(int argc, char *argv[])
 
 	//Call the wrapper function
 	convert_to_gray(input, output);
+	cv::imwrite("output.jpg", output);
 
 	//Allow the windows to resize
-	namedWindow("Input", cv::WINDOW_NORMAL);
-	namedWindow("Output", cv::WINDOW_NORMAL);
+	//namedWindow("Input", cv::WINDOW_NORMAL);
+	//namedWindow("Output", cv::WINDOW_NORMAL);
 
 	//Show the input and output
-	imshow("Input", input);
-	imshow("Output", output);
+	//imshow("Input", input);
+	//imshow("Output", output);
 
 	//Wait for key press
-	cv::waitKey();
+	//cv::waitKey();
 
 	return 0;
 }
